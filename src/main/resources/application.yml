@@ -10,9 +10,21 @@ spring:
       port: ${REDIS_PORT:6379}
 
 rate-limiter:
-  capacity: 1.0
-  refill-rate-per-second: 2.0
+  # Maximum tokens in bucket (burst capacity)
+  # For 2 requests/minute: capacity of 2 allows 2 requests immediately, then enforces the limit
+  capacity: 2.0
+
+  # Tokens refilled per second (this controls the sustained rate limit)
+  # Formula: refill-rate-per-second = requests-per-minute / 60
+  # For 2 requests/minute: 2/60 = 0.0333...
+  # Examples:
+  #   - 2 requests/minute  → refill-rate-per-second: 0.0333
+  #   - 60 requests/minute → refill-rate-per-second: 1.0
+  refill-rate-per-second: 0.0333  # = 2 requests/minute (2/60)
+  
+  # Tokens consumed per request (usually 1.0)
   cost-per-request: 1.0
-  fail-open-on-redis-error: true
-
-
+  
+  # If true, allow requests when Redis is unavailable (fail-open)
+  # If false, reject requests when Redis is unavailable (fail-closed)
+  fail-open-on-redis-error: false

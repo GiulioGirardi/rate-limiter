@@ -1,7 +1,6 @@
 package com.example.ratelimiter.service;
 
 import com.example.ratelimiter.config.RateLimiterProperties;
-import com.example.ratelimiter.model.RateLimitDecision;
 import com.example.ratelimiter.model.RateLimitResult;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,9 +35,7 @@ public class RateLimiterService {
     private final RateLimiterProperties properties;
     private final Clock clock;
 
-    /**
-     * Primary constructor used by Spring for dependency injection.
-     */
+
     @Autowired
     public RateLimiterService(
             StringRedisTemplate redisTemplate,
@@ -52,16 +49,6 @@ public class RateLimiterService {
         this.clock = clock;
     }
 
-    /**
-     * Convenience constructor that uses the system UTC clock.
-     */
-    public RateLimiterService(
-            StringRedisTemplate redisTemplate,
-            DefaultRedisScript<List> rateLimiterScript,
-            RateLimiterProperties properties
-    ) {
-        this(redisTemplate, rateLimiterScript, properties, Clock.systemUTC());
-    }
 
     /**
      * Evaluate whether the client is allowed to perform one request at this time.

@@ -26,7 +26,7 @@ public class RateLimiterProperties {
      * If true, requests are allowed when Redis is unavailable or the Lua script fails.
      * If false, requests are rejected when we cannot reliably enforce limits.
      */
-    private boolean failOpenOnRedisError = true;
+    private boolean failOpenOnRedisError;
 
     public double getCapacity() {
         return capacity;
