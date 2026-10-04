@@ -1,4 +1,4 @@
-package com.example.ratelimiter;
+package io.github.giuliogirardi.ratelimiter;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,5 +10,3 @@ public class RateLimiterApplication {
         SpringApplication.run(RateLimiterApplication.class, args);
     }
 }
-
-
