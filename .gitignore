@@ -80,17 +80,39 @@ spring-boot-*.log
 
 # Environment variables
 .env
-.env.local
-.env.*.local
+.env.*
+!.env.example
 
 # Application specific
 application-local.yml
 application-local.properties
+docker-compose.override.yml
+
+# Secrets: keys, certificates and keystores
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+*.keystore
+*.truststore
+credentials.json
+
+# Redis persistence files (created when running redis-server from the repo)
+dump.rdb
+*.aof
+appendonlydir/
+
+# JVM heap dumps and crash logs (may contain in-memory data)
+*.hprof
+hs_err_pid*.log
+
+# Claude Code personal settings
+.claude/settings.local.json
 
 # Temporary files
 *.tmp
 *.temp
 *.swp
 *.swo
-*~
 
