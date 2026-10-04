@@ -8,23 +8,26 @@ spring:
     redis:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
+      # Latency budget for each rate-limit decision. Without it Lettuce waits up to 60s
+      # before the fail-open / fail-closed policy can kick in.
+      timeout: 250ms
+      connect-timeout: 500ms
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics
 
 rate-limiter:
-  # Maximum tokens in bucket (burst capacity)
-  # For 2 requests/minute: capacity of 2 allows 2 requests immediately, then enforces the limit
-  capacity: 2.0
-
-  # Tokens refilled per second (this controls the sustained rate limit)
-  # Formula: refill-rate-per-second = requests-per-minute / 60
-  # For 2 requests/minute: 2/60 = 0.0333...
-  # Examples:
-  #   - 2 requests/minute  → refill-rate-per-second: 0.0333
-  #   - 60 requests/minute → refill-rate-per-second: 1.0
-  refill-rate-per-second: 0.0333  # = 2 requests/minute (2/60)
-  
-  # Tokens consumed per request (usually 1.0)
-  cost-per-request: 1.0
-  
-  # If true, allow requests when Redis is unavailable (fail-open)
-  # If false, reject requests when Redis is unavailable (fail-closed)
+  # Burst size: a new client can make this many requests back to back.
+  capacity: 2
+  # Sustained rate. requests-per-minute / 60, so 0.0333 is about 2 requests per minute.
+  refill-rate-per-second: 0.0333
+  # Tokens consumed per request.
+  cost-per-request: 1
+  # Redis failure policy: true = let traffic through (fail-open), false = respond 503 (fail-closed).
   fail-open-on-redis-error: false
+  # Never rate limited (health checks, metrics scraping).
+  excluded-paths:
+    - /actuator/**
